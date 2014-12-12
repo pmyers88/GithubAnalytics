@@ -1,22 +1,20 @@
 #!venv/bin/python
 import requests
 import re
-import json
-import sys
 import datetime
 from time import time, sleep
 
 
 HEADERS = {
-    'Authorization': 'token %s' % 'MY_SERCRET_TOKEN' 
+    'Authorization': 'token %s' % 'MY_SERCRET_TOKEN'
 }
 
 
 graph = open('graph.txt', 'a')
 usernames = open('usernames.txt', 'a')
-next_url = 'https://api.github.com/users?since=10215'
+next_url = 'https://api.github.com/users'
 limit_response = requests.get('https://api.github.com/rate_limit',
-        headers=HEADERS)
+                              headers=HEADERS)
 remaining = int(limit_response.headers['X-RateLimit-Remaining'])
 while True:
     response = requests.get(next_url, headers=HEADERS)
@@ -32,7 +30,8 @@ while True:
     if remaining <= len(users_json):
         wait_seconds = reset - time() + 10
         print ('Not enough requests remaining; Going to sleep until %s' %
-                datetime.datetime.fromtimestamp(reset + 10).strftime('%Y-%m-%d %H:%M:%S'))
+               datetime.datetime.fromtimestamp(reset + 10)
+               .strftime('%Y-%m-%d %H:%M:%S'))
         sleep(wait_seconds)
         print 'I\'m awake! Gonna make more requests now...'
     for user in users_json:
