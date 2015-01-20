@@ -75,9 +75,11 @@ object Analytics extends Logging {
           (fields(0).toLong, fields(1))
         }
 
+        println("The top ten Github users are: (format - (PageRank, username))")
         val top10 = users.join(pr).map {
           case (id, (username, rank)) => (rank, username)
         }.sortByKey(false).take(10)
+        println("The top ten Github users are: (format - (PageRank, username))")
         println(top10.mkString("\n"))
 
         sc.stop()
